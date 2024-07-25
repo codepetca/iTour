@@ -9,17 +9,11 @@ import SwiftData
 import SwiftUI
 
 struct ContentView: View {
+    @Environment(\.modelContext) var modelContext
     @Query var destinations: [Destination]
 
     var body: some View {
         NavigationStack {
-            VStack {
-                Image(systemName: "globe")
-                    .imageScale(.large)
-                    .foregroundStyle(.tint)
-                Text("Hello, world!")
-            }
-            .padding()
 
             List {
                 ForEach(destinations) { destination in
@@ -42,6 +36,10 @@ struct ContentView: View {
         let rome = Destination(name: "Rome")
         let florence = Destination(name: "Florence")
         let naples = Destination(name: "Naples")
+
+        modelContext.insert(rome)
+        modelContext.insert(florence)
+        modelContext.insert(naples)
     }
 }
 
