@@ -14,14 +14,14 @@ struct DestinationListingView: View {
         SortDescriptor(\Destination.priority), SortDescriptor(\Destination.name, order: .reverse),
     ]) var destinations: [Destination]
 
-    init(sort: [SortDescriptor<Destination>], searchString: String) {
+    init(sort: [SortDescriptor<Destination>], searchString: String, onlyFuture: Bool) {
+
+        let now = Date()
+
         _destinations = Query(
-            filter: #Predicate {
-                if searchString.isEmpty {
-                    return true
-                } else {
-                    return $0.name.localizedStandardContains(searchString)
-                }
+            filter: #Predicate<Destination> {
+                ($0.date > now || !onlyFuture) && (searchString.isEmpty || $0.name.localizedStandardContains(searchString))
+
             }, sort: sort)
     }
 
@@ -49,5 +49,6 @@ struct DestinationListingView: View {
 }
 
 #Preview {
-    DestinationListingView(sort: [SortDescriptor(\Destination.name)], searchString: "")
+    DestinationListingView(
+        sort: [SortDescriptor(\Destination.name)], searchString: "", onlyFuture: true)
 }

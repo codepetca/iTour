@@ -11,12 +11,13 @@ import SwiftUI
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @State private var path = [Destination]()
-    @State private var sortOrder: [SortDescriptor] = [SortDescriptor(\Destination.name)]
     @State private var searchText = ""
+    @State private var sortOrder: [SortDescriptor] = [SortDescriptor(\Destination.name)]
+    @State private var onlyFuture: Bool = true
 
     var body: some View {
         NavigationStack(path: $path) {
-            DestinationListingView(sort: sortOrder, searchString: searchText)
+            DestinationListingView(sort: sortOrder, searchString: searchText, onlyFuture: onlyFuture)
                 .navigationDestination(for: Destination.self, destination: EditDestinationView.init)
                 .navigationTitle("iTour")
                 .searchable(
@@ -42,6 +43,13 @@ struct ContentView: View {
                                 ])
                         }
                         .pickerStyle(.inline)
+                        
+                        Picker("Toggle", selection: $onlyFuture){
+                            Text("Future Trips")
+                                .tag(true)
+                            Text("All Trips")
+                                .tag(false)
+                        }
 
                     }
 
